@@ -1,0 +1,150 @@
+﻿@using EXAM_ASP_NET.Data.Entities
+@model EXAM_ASP_NET.Data.Entities.Product
+
+@{
+    ViewData["Title"] = "Create Active Lot";
+}
+
+<h2>Create Active Lot</h2>
+
+<form asp-action="Create" method="post" class="form-horizontal">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="CategoryId" class="form-label">Category</label>
+        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories">
+            <option value="">-- select --</option>
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="StartingPrice" class="form-label">Starting Price</label>
+        <input asp-for="StartingPrice" type="number" min="0" step="0.01" class="form-control" placeholder="Enter starting price">
+        <span asp-validation-for="StartingPrice" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="BuyNowPrice" class="form-label">Buy Now Price (optional)</label>
+        <input asp-for="BuyNowPrice" type="number" min="0" step="0.01" class="form-control" placeholder="Enter buy now price">
+        <span asp-validation-for="BuyNowPrice" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MinBidIncrement" class="form-label">Min Bid Increment</label>
+        <input asp-for="MinBidIncrement" type="number" min="0" step="0.01" class="form-control" placeholder="Enter minimum bid increment">
+        <span asp-validation-for="MinBidIncrement" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Quantity" class="form-label">Quantity</label>
+        <input asp-for="Quantity" min="1" step="1" type="number" class="form-control" placeholder="Enter quantity">
+        <span asp-validation-for="Quantity" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="StartDate" class="form-label">Start Date & Time</label>
+        <input asp-for="StartDate" type="datetime-local" class="form-control">
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="EndDate" class="form-label">End Date & Time</label>
+        <input asp-for="EndDate" type="datetime-local" class="form-control">
+        <span asp-validation-for="EndDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ImageUrl" class="form-label">Image Url</label>
+        <input asp-for="ImageUrl" type="url" class="form-control" placeholder="Enter image URL">
+        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">Description</label>
+        <textarea asp-for="Description" class="form-control" rows="3" placeholder="Enter auction description"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        (function () {
+            const form = document.querySelector('form[asp-action="Create"]') || document.querySelector('form');
+            const startEl = document.getElementById('StartDate') || document.querySelector('input[name="StartDate"]');
+            const endEl = document.getElementById('EndDate') || document.querySelector('input[name="EndDate"]');
+
+            const startMsg = document.querySelector('[data-valmsg-for="StartDate"]') || document.createElement('span');
+            const endMsg = document.querySelector('[data-valmsg-for="EndDate"]') || document.createElement('span');
+
+            if (!form || !startEl || !endEl) return;
+
+            function setInvalid(el, msgEl, message) {
+                el.classList.add('is-invalid');
+                msgEl.textContent = message;
+            }
+            function clearInvalid(el, msgEl) {
+                el.classList.remove('is-invalid');
+                msgEl.textContent = '';
+            }
+
+            function parseLocalDateTime(value) {
+                return value ? new Date(value) : null;
+            }
+
+            function validate() {
+                let ok = true;
+                const sVal = startEl.value;
+                const eVal = endEl.value;
+
+                if (!sVal) {
+                    setInvalid(startEl, startMsg, 'Start Date is required.');
+                    ok = false;
+                } else {
+                    clearInvalid(startEl, startMsg);
+                }
+
+                if (!eVal) {
+                    setInvalid(endEl, endMsg, 'End Date is required.');
+                    ok = false;
+                } else {
+                    clearInvalid(endEl, endMsg);
+                }
+
+                if (sVal && eVal) {
+                    const sDate = parseLocalDateTime(sVal);
+                    const eDate = parseLocalDateTime(eVal);
+                    if (!(eDate > sDate)) {
+                        setInvalid(endEl, endMsg, 'End Date must be later than Start Date.');
+                        ok = false;
+                    } else {
+                        clearInvalid(endEl, endMsg);
+                    }
+                }
+
+                return ok;
+            }
+
+            form.addEventListener('submit', function (e) {
+                if (!validate()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
+
+            startEl.addEventListener('change', validate);
+            endEl.addEventListener('change', validate);
+        })();
+    </script>
+}

@@ -1,0 +1,25 @@
+﻿﻿@{
+string nickname = "Julfy";
+}
+
+<h1>Privacy</h1>
+
+<p>Use this page to detail your site's privacy policy.</p>
+
+@for (int i = 0; i < 10; i++)
+{
+    <img width="50" src="https://pngimg.com/d/ukraine_PNG16.png" alt="Ukraine" />
+}
+
+<p>Created for Group @nickname</p>
+
+<div class="mt-2">
+    @if (DateTime.Now.Second % 2 == 0)
+    {
+        <img width="100" src="https://static.vecteezy.com/system/resources/previews/021/948/347/non_2x/national-ukrainian-flag-isolated-illustration-the-color-of-the-original-free-png.png" alt="Alternate Text" />
+    }
+    else
+    {
+        <img width="70" src="https://cdn.pixabay.com/photo/2023/08/17/17/19/ukraine-8197050_1280.png" alt="Alternate Text" />
+    }
+</div>

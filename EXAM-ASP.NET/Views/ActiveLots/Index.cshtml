@@ -1,0 +1,163 @@
+﻿@using EXAM_ASP_NET.Data.Entities
+@model List<Product>
+
+@{
+    var count = Model?.Count ?? 0;
+    bool isEmpty = count == 0;
+
+    DateTime? ToDateTime(object? o)
+    {
+        if (o == null) return null;
+        if (o is DateTime dt) return dt;
+        if (o is DateTimeOffset dto) return dto.UtcDateTime;
+        if (o is string s && DateTime.TryParse(s, out var parsed)) return parsed;
+        return null;
+    }
+
+    decimal? ToDecimal(object? o)
+    {
+        if (o == null) return null;
+        try
+        {
+            if (o is decimal d) return d;
+            if (o is double db) return Convert.ToDecimal(db);
+            if (o is float f) return Convert.ToDecimal(f);
+            if (o is int i) return Convert.ToDecimal(i);
+            if (o is long l) return Convert.ToDecimal(l);
+            if (o is string s && decimal.TryParse(s, out var parsed)) return parsed;
+            return Convert.ToDecimal(o);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    string FormatCurrency(decimal? v)
+    {
+        if (v == null) return "—";
+        return string.Format(System.Globalization.CultureInfo.GetCultureInfo("uk-UA"), "{0:C0}", v);
+    }
+
+    string TimeLeftLabel(DateTime end)
+    {
+        var now = DateTime.UtcNow;
+        var endUtc = end.Kind == DateTimeKind.Unspecified ? DateTime.SpecifyKind(end, DateTimeKind.Utc) : end.ToUniversalTime();
+        var ts = endUtc - now;
+        if (ts <= TimeSpan.Zero) return "Завершено";
+        if (ts.TotalDays >= 1) return $"Закінчиться через {(int)ts.TotalDays}д {(ts.Hours)}год {(ts.Minutes)}хв";
+        if (ts.TotalHours >= 1) return $"Закінчиться через {(int)ts.TotalHours}год {(ts.Minutes)}хв";
+        return $"Закінчиться через {ts.Minutes}хв {ts.Seconds}с";
+    }
+
+    object? TryGet(object item, params string[] names)
+    {
+        if (item == null) return null;
+        var t = item.GetType();
+        foreach (var n in names)
+        {
+            var p = t.GetProperty(n);
+            if (p != null)
+            {
+                try { return p.GetValue(item); } catch { }
+            }
+        }
+        return null;
+    }
+}
+
+<h2 class="mb-3">Активні лоти</h2>
+
+@if (isEmpty)
+{
+    <div class="alert alert-info">Немає активних лотів.</div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 g-3">
+        @foreach (var item in Model)
+        {
+            var title = TryGet(item, "Title", "Name")?.ToString() ?? "Без назви";
+            var endObj = TryGet(item, "EndTime", "EndDate", "EndsAt", "Expiry");
+            var endDt = ToDateTime(endObj);
+            var timeLabel = endDt.HasValue ? TimeLeftLabel(endDt.Value) : "Час невідомий";
+
+            var currentObj = TryGet(item, "CurrentPrice", "CurrentBid", "Current") ?? TryGet(item, "Price", "StartingPrice");
+            var currentPrice = ToDecimal(currentObj);
+
+            var userBidObj = TryGet(item, "UserBid", "MyBid");
+            var userBid = ToDecimal(userBidObj);
+
+            var outbidObj = TryGet(item, "IsOutbid", "HasBeenOutbid", "Outbid", "WasOutbid");
+            bool? outbidExplicit = null;
+            if (outbidObj is bool b) outbidExplicit = b;
+            if (outbidExplicit == null && userBid.HasValue && currentPrice.HasValue)
+            {
+                outbidExplicit = userBid.Value < currentPrice.Value;
+            }
+
+            var isFinished = endDt.HasValue && (endDt.Value.ToUniversalTime() <= DateTime.UtcNow);
+
+            var statusClass = "secondary";
+            var statusText = "Невідомо";
+            if (isFinished)
+            {
+                statusClass = "dark";
+                statusText = "Завершено";
+            }
+            else if (outbidExplicit == true)
+            {
+                statusClass = "danger";
+                statusText = "Побито ставку";
+            }
+            else if (outbidExplicit == false)
+            {
+                statusClass = "success";
+                statusText = "Ви лідер";
+            }
+
+            var priceText = FormatCurrency(currentPrice ?? ToDecimal(TryGet(item, "Price")));
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title mb-0">@title</h5>
+                        <span class="badge bg-primary fs-6">@priceText</span>
+                    </div>
+
+                    <small class="text-muted mb-2">
+                        <i class="bi bi-clock"></i>
+                        @if (endDt.HasValue)
+                        {
+                            <span title="@endDt.Value.ToLocalTime().ToString("g")">@timeLabel</span>
+                        }
+                        else
+                        {
+                            <span>Час кінця: невідомо</span>
+                        }
+                    </small>
+
+                    <div class="mt-auto d-flex justify-content-between align-items-center">
+                        <span class="badge bg-@statusClass">@statusText</span>
+                        <div>
+                            <a asp-action="Details" asp-route-id="@TryGet(item, "Id")" class="btn btn-outline-primary btn-sm me-1">Деталі</a>
+                            <a asp-action="Bid" asp-route-id="@TryGet(item, "Id")" class="btn btn-warning btn-sm @(isFinished ? "disabled" : "")">Зробити ставку</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-muted small">
+                    ID: @TryGet(item, "Sku") ?? TryGet(item, "Id") ?? "—"
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+}
+
+<div class="mt-3">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-link">Повернутися до покупок</a>
+</div>
+
+<div class="mt-2 text-muted">
+    Загальна кількість: @count
+</div>

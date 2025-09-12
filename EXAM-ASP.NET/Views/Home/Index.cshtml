@@ -1,0 +1,29 @@
+﻿@using EXAM_ASP_NET.Data.Entities
+@model List<Product>
+
+<div class="text-center">
+    <h1 class="display-4">
+        Welcome to Online Auction
+        <img width="50" src="https://pngimg.com/d/ukraine_PNG16.png" alt="Ukraine" />
+    </h1>
+</div>
+
+@{
+    var products = Model ?? new List<Product>();
+}
+
+@if (!products.Any())
+{
+    <div class="alert alert-info">Немає товарів для показу.</div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">
+        @foreach (var i in products)
+        {
+            <div class="col">
+                <partial name="_ProductCardPartial" model="i" />
+            </div>
+        }
+    </div>
+}
