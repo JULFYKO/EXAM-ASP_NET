@@ -4,7 +4,9 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>EXAM_ASP.NET</RootNamespace>
+    <RootNamespace>EXAM_ASP_NET</RootNamespace>
+    <AssemblyName>EXAM_ASP_NET</AssemblyName>
+    <UserSecretsId>44f797b4-45a3-4446-9a55-8cf40c44e174</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
