@@ -86,9 +86,15 @@ namespace EXAM_ASP_NET.Controllers
     
     public async Task<IActionResult> Bid(int id)
         {
-            var product = await _db.Products.Include(p => p.Category)
-                                            .FirstOrDefaultAsync(p => p.Id == id && p.IsAuction);
-            if (product == null) return NotFound();
+            var product = await _db.Products
+        .Include(p => p.Category)
+    .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
 
             var vm = new BidViewModel
             {

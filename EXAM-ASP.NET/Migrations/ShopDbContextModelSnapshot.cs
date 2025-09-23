@@ -22,6 +22,34 @@ namespace EXAM_ASP.NET.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("EXAM_ASP_NET.Data.Entities.Bid", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Bids");
+                });
+
             modelBuilder.Entity("EXAM_ASP_NET.Data.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -94,10 +122,10 @@ namespace EXAM_ASP.NET.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("AuctionEnd")
+                    b.Property<DateTime?>("AuctionEnd")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("AuctionStart")
+                    b.Property<DateTime?>("AuctionStart")
                         .HasColumnType("datetime2");
 
                     b.Property<decimal?>("BuyNowPrice")
@@ -113,7 +141,7 @@ namespace EXAM_ASP.NET.Migrations
                         .HasMaxLength(3000)
                         .HasColumnType("nvarchar(3000)");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ImageUrl")
@@ -131,7 +159,7 @@ namespace EXAM_ASP.NET.Migrations
                     b.Property<decimal?>("ReservePrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("StartingPrice")
@@ -158,12 +186,10 @@ namespace EXAM_ASP.NET.Migrations
                             AuctionStart = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = 1,
                             Description = "Pre-owned iPhone X sold via auction.",
-                            EndDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ImageUrl = "https://applecity.com.ua/image/cache/catalog/0iphone/ipohnex/iphone-x-black-1000x1000.png",
                             IsAuction = true,
                             MinBidIncrement = 0.01m,
                             Quantity = 1,
-                            StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartingPrice = 650m,
                             Title = "Lot 001: iPhone X - Auction Grade B"
                         },
@@ -174,12 +200,10 @@ namespace EXAM_ASP.NET.Migrations
                             AuctionStart = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = 2,
                             Description = "Collectible PowerBall trainer.",
-                            EndDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ImageUrl = "https://http2.mlstatic.com/D_NQ_NP_727192-CBT53879999753_022023-V.jpg",
                             IsAuction = false,
                             MinBidIncrement = 0.01m,
                             Quantity = 1,
-                            StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartingPrice = 45.5m,
                             Title = "Lot 002: PowerBall Trainer - Collectible"
                         },
@@ -190,12 +214,10 @@ namespace EXAM_ASP.NET.Migrations
                             AuctionStart = new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = 3,
                             Description = "Vintage Nike T-Shirt offered at auction.",
-                            EndDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ImageUrl = "https://www.seekpng.com/png/detail/316-3168852_nike-air-logo-t-shirt-nike-t-shirt.png",
                             IsAuction = true,
                             MinBidIncrement = 0.01m,
                             Quantity = 1,
-                            StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartingPrice = 189m,
                             Title = "Lot 003: Nike T-Shirt (Vintage Auction Piece)"
                         },
@@ -206,12 +228,10 @@ namespace EXAM_ASP.NET.Migrations
                             AuctionStart = new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = 1,
                             Description = "Brand new Samsung S23.",
-                            EndDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ImageUrl = "https://sota.kh.ua/image/cache/data/Samsung-2/samsung-s23-s23plus-blk-01-700x700.webp",
                             IsAuction = true,
                             MinBidIncrement = 0.01m,
                             Quantity = 1,
-                            StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartingPrice = 1200m,
                             Title = "Lot 004: Samsung S23 - Auction, New/Sealed"
                         },
@@ -222,12 +242,10 @@ namespace EXAM_ASP.NET.Migrations
                             AuctionStart = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = 6,
                             Description = "Signed basketball - collectible item.",
-                            EndDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ImageUrl = "https://cdn.shopify.com/s/files/1/0046/1163/7320/products/69ee701e-e806-4c4d-b804-d53dc1f0e11a_grande.jpg",
                             IsAuction = false,
                             MinBidIncrement = 0.01m,
                             Quantity = 1,
-                            StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartingPrice = 50m,
                             Title = "Lot 005: Signed Air Ball (Collectible)"
                         },
@@ -238,12 +256,10 @@ namespace EXAM_ASP.NET.Migrations
                             AuctionStart = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = 1,
                             Description = "MacBook Pro from estate sale.",
-                            EndDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ImageUrl = "https://newtime.ua/image/import/catalog/mac/macbook_pro/MacBook-Pro-16-2019/MacBook-Pro-16-Space-Gray-2019/MacBook-Pro-16-Space-Gray-00.webp",
                             IsAuction = false,
                             MinBidIncrement = 0.01m,
                             Quantity = 1,
-                            StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartingPrice = 900m,
                             Title = "Lot 006: MacBook Pro 2019 - Estate Sale"
                         },
@@ -254,11 +270,9 @@ namespace EXAM_ASP.NET.Migrations
                             AuctionStart = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = 2,
                             Description = "Vintage Samsung S4 phone lot.",
-                            EndDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsAuction = false,
                             MinBidIncrement = 0.01m,
                             Quantity = 1,
-                            StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartingPrice = 440m,
                             Title = "Lot 007: Samsung S4 - Vintage Phone Lot"
                         });
@@ -460,6 +474,17 @@ namespace EXAM_ASP.NET.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("EXAM_ASP_NET.Data.Entities.Bid", b =>
+                {
+                    b.HasOne("EXAM_ASP_NET.Data.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("EXAM_ASP_NET.Data.Entities.Product", b =>
