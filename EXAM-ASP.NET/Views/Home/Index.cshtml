@@ -1,11 +1,12 @@
 ﻿@using EXAM_ASP_NET.Data.Entities
 @model List<Product>
 
-<div class="text-center">
-    <h1 class="display-4">
-        Welcome to Online Auction
-        <img width="50" src="https://pngimg.com/d/ukraine_PNG16.png" alt="Ukraine" />
+<div class="text-center mb-4">
+    <h1 class="display-5 fw-bold text-light">
+        🎉 Welcome to Online Auction
+        <img width="55" class="ms-2" src="https://pngimg.com/d/ukraine_PNG16.png" alt="Ukraine" />
     </h1>
+    <p class="text-muted">Зроби свою ставку та вигравай 🔥</p>
 </div>
 
 @{
@@ -14,7 +15,9 @@
 
 @if (!products.Any())
 {
-    <div class="alert alert-info">Немає товарів для показу.</div>
+    <div class="alert alert-info rounded-3 shadow-sm bg-dark text-light border-0 text-center">
+        Немає товарів для показу.
+    </div>
 }
 else
 {

@@ -3,20 +3,24 @@
 
 @{
     var img = string.IsNullOrWhiteSpace(Model.ImageUrl) ? "/images/placeholder.png" : Model.ImageUrl;
-    var desc = Model.Description ?? string.Empty;
-    var shortDesc = desc.Length > 120 ? desc[..120] + "…" : desc;
+    var shortDesc = (Model.Description ?? string.Empty).Length > 120
+        ? Model.Description[..120] + "…"
+        : Model.Description ?? string.Empty;
     var price = Model.StartingPrice;
 }
 
 <div class="card h-100">
-    <img src="@img" class="card-img-top" alt="@Model.Title" onerror="this.src='/images/placeholder.png'">
+    <img src="@img" class="card-img-top" alt="@Model.Title" onerror="this.src='/images/placeholder.png'" />
     <div class="card-body d-flex flex-column">
-        <div class="d-flex justify-content-between align-items-start mb-2">
+        <div class="d-flex justify-content-between mb-2">
             <h5 class="card-title mb-0">@Model.Title</h5>
             <span class="badge bg-primary">@price.ToString("C")</span>
         </div>
 
-        <p class="text-muted small mb-2">@Model.Category?.Name</p>
+        @if (!string.IsNullOrEmpty(Model.Category?.Name))
+        {
+            <p class="text-muted small mb-2">@Model.Category.Name</p>
+        }
 
         @if (!string.IsNullOrEmpty(shortDesc))
         {
@@ -32,6 +36,3 @@
         ID: @Model.Id
     </div>
 </div>
-
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>

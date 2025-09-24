@@ -1,25 +1,38 @@
-﻿﻿@{
-string nickname = "Julfy";
+﻿@{
+    string nickname = "Julfy";
+    bool evenSecond = DateTime.Now.Second % 2 == 0;
 }
 
-<h1>Privacy</h1>
+<div class="container py-5 text-light">
+    <h1 class="mb-4">Privacy Policy</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+    <p class="lead">Use this page to detail your site's privacy policy.</p>
 
-@for (int i = 0; i < 10; i++)
-{
-    <img width="50" src="https://pngimg.com/d/ukraine_PNG16.png" alt="Ukraine" />
-}
+    <div class="mb-3 d-flex flex-wrap gap-2">
+        @for (int i = 0; i < 10; i++)
+        {
+            <img width="50" src="https://pngimg.com/d/ukraine_PNG16.png" alt="Ukraine" class="rounded shadow-sm" />
+        }
+    </div>
 
-<p>Created for Group @nickname</p>
+    <p>Created for Group <strong>@nickname</strong></p>
 
-<div class="mt-2">
-    @if (DateTime.Now.Second % 2 == 0)
-    {
-        <img width="100" src="https://static.vecteezy.com/system/resources/previews/021/948/347/non_2x/national-ukrainian-flag-isolated-illustration-the-color-of-the-original-free-png.png" alt="Alternate Text" />
-    }
-    else
-    {
-        <img width="70" src="https://cdn.pixabay.com/photo/2023/08/17/17/19/ukraine-8197050_1280.png" alt="Alternate Text" />
-    }
+    <div class="mt-4 text-center">
+        @if (evenSecond)
+        {
+            <img width="100" src="https://static.vecteezy.com/system/resources/previews/021/948/347/non_2x/national-ukrainian-flag-isolated-illustration-the-color-of-the-original-free-png.png"
+                 alt="Alternate Ukraine Flag" class="rounded shadow" />
+        }
+        else
+        {
+            <img width="70" src="https://cdn.pixabay.com/photo/2023/08/17/17/19/ukraine-8197050_1280.png"
+                 alt="Alternate Ukraine Flag" class="rounded shadow" />
+        }
+    </div>
 </div>
+
+<style>
+    body {
+        background-color: #121212;
+    }
+</style>
