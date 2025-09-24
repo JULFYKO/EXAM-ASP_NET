@@ -2,6 +2,11 @@
 
 <h2 class="text-light mb-4">Create Auction Listing</h2>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
 <form class="row g-3" asp-action="Create" method="post">
     <input asp-for="IsAuction" type="hidden" value="true" />
 

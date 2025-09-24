@@ -24,6 +24,7 @@
     }
 
     <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="mb-3">
@@ -38,6 +39,15 @@
                 <option value="">-- select --</option>
             </select>
             <span asp-validation-for="CategoryId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="IsAuction" class="form-label text-light">Type</label>
+            <select asp-for="IsAuction" class="form-control bg-dark text-light border-light">
+                <option value="true">Auction</option>
+                <option value="false">Buy Now / Fixed</option>
+            </select>
+            <span asp-validation-for="IsAuction" class="text-danger"></span>
         </div>
 
         <div class="mb-3">

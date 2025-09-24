@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Linq;
+using System;
 
 namespace EXAM_ASP_NET.Controllers
 {
@@ -56,6 +58,7 @@ namespace EXAM_ASP_NET.Controllers
 
             _db.Products.Add(product);
             await _db.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Лот успішно створено.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -81,6 +84,7 @@ namespace EXAM_ASP_NET.Controllers
 
             _db.Products.Update(product);
             await _db.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Лот успішно оновлено.";
             return RedirectToAction(nameof(Index));
         }
     

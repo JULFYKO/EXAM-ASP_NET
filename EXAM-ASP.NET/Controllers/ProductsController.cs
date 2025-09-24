@@ -43,6 +43,7 @@ namespace EXAM_ASP_NET.Controllers
 
             _db.Products.Update(product);
             await _db.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Лот успішно оновлено.";
             return RedirectToAction("Index", "ActiveLots");
         }
 
@@ -62,6 +63,7 @@ namespace EXAM_ASP_NET.Controllers
 
             _db.Products.Remove(product);
             await _db.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Лот успішно видалено.";
             return RedirectToAction("Index", "ActiveLots");
         }
     }
