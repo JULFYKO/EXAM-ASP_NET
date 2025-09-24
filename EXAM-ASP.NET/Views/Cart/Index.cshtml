@@ -1,0 +1,36 @@
+@model List<EXAM_ASP_NET.Data.Entities.Product>
+
+@{
+    ViewData["Title"] = "Cart";
+}
+
+<div class="container my-4">
+    <div class="card bg-dark text-light shadow-lg rounded-4">
+        <div class="card-header border-0 bg-gradient fw-bold fs-4">Ваша корзина</div>
+        <div class="card-body">
+            @if (Model == null || !Model.Any())
+            {
+                <div class="alert alert-info">Корзина порожня.</div>
+            }
+            else
+            {
+                <ul class="list-group list-group-flush">
+                    @foreach (var p in Model)
+                    {
+                        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>@p.Title</strong><br />
+                                <small class="text-muted">@p.Category?.Name</small>
+                            </div>
+                            <span class="badge bg-primary">@p.StartingPrice.ToString("C")</span>
+                        </li>
+                    }
+                </ul>
+                <form asp-action="Clear" method="post" class="mt-3">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Очистити корзину</button>
+                </form>
+            }
+        </div>
+    </div>
+</div>

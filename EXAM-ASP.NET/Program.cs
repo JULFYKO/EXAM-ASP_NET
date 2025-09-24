@@ -1,5 +1,6 @@
 using EXAM_ASP_NET.Data;
 using EXAM_ASP_NET.Interfaces;
+using EXAM_ASP_NET.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,8 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<ShopDbContext>(options =>
     options.UseSqlServer(connStr));
+
+builder.Services.AddScoped<ICartService, CookieCartService>();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
