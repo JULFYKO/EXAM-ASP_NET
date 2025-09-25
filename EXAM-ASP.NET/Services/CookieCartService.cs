@@ -65,7 +65,22 @@ namespace EXAM_ASP_NET.Services
             var ids = GetItemIds();
             ids.Add(id);
             // keep small, distinct
-            ids = ids.Where(i => i > 0).ToList();
+            ids = ids.Where(i => i > 0).Distinct().ToList();
+            SaveIds(ids);
+        }
+
+        public void Remove(int id)
+        {
+            var ids = GetItemIds();
+            if (ids == null || ids.Count == 0) return;
+            // remove all occurrences of this id
+            ids = ids.Where(i => i != id).ToList();
+            if (ids.Count == 0)
+            {
+                var ctx = _http.HttpContext;
+                if (ctx != null) ctx.Response.Cookies.Delete(CookieName);
+                return;
+            }
             SaveIds(ids);
         }
 
@@ -78,7 +93,7 @@ namespace EXAM_ASP_NET.Services
 
         public int GetCartSize()
         {
-            return GetItemIds().Count;
+            return GetItemIds().Distinct().Count();
         }
     }
 }

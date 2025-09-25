@@ -8,6 +8,7 @@ namespace EXAM_ASP_NET.Interfaces
         List<Product> GetProducts();
 
         void Add(int id);
+        void Remove(int id);
         void Clear();
         int GetCartSize();
     }

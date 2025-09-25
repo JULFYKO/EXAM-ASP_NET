@@ -8,6 +8,8 @@
     <div class="card bg-dark text-light shadow-lg rounded-4">
         <div class="card-header border-0 bg-gradient fw-bold fs-4">Ваша корзина</div>
         <div class="card-body">
+            <div class="mb-3 text-muted">Загальна кількість: <strong>@(Model?.Count ?? 0)</strong></div>
+
             @if (Model == null || !Model.Any())
             {
                 <div class="alert alert-info">Корзина порожня.</div>
@@ -22,7 +24,14 @@
                                 <strong>@p.Title</strong><br />
                                 <small class="text-muted">@p.Category?.Name</small>
                             </div>
-                            <span class="badge bg-primary">@p.StartingPrice.ToString("C")</span>
+                            <div class="d-flex gap-2 align-items-center">
+                                <span class="badge bg-primary">@p.StartingPrice.ToString("C")</span>
+                                <form asp-action="Remove" method="post" class="ms-2">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@p.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                                </form>
+                            </div>
                         </li>
                     }
                 </ul>
