@@ -34,5 +34,8 @@ namespace EXAM_ASP_NET.Models
         [DataType(DataType.Password)]
         [Compare("Password")]
         public string ConfirmPassword { get; set; } = string.Empty;
+
+        [Display(Name = "Send credentials to my email")]
+        public bool SendCredentials { get; set; } = true;
     }
 }

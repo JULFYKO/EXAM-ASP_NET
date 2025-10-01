@@ -13,6 +13,13 @@
     var products = Model ?? new List<Product>();
 }
 
+@if (User?.Identity?.IsAuthenticated == true)
+{
+    <div class="alert alert-success rounded-3 shadow-sm bg-dark text-light border-0 mb-4">
+        Вітаємо, <strong>@User.Identity.Name</strong>! Ви увійшли в систему.
+    </div>
+}
+
 @if (!products.Any())
 {
     <div class="alert alert-info rounded-3 shadow-sm bg-dark text-light border-0 text-center">

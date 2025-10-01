@@ -25,15 +25,6 @@ namespace EXAM_ASP_NET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Remove(int id)
-        {
-            _cart.Remove(id);
-            TempData["SuccessMessage"] = "Товар видалено з корзини.";
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Clear()
         {
             _cart.Clear();

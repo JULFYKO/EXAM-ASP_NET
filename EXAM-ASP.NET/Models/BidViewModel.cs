@@ -32,10 +32,8 @@ namespace EXAM_ASP_NET.Models
         [Display(Name = "Your bid")]
         public decimal BidAmount { get; set; }
 
-        // History
         public List<BidDto>? BidHistory { get; set; }
 
-        // Messages to show after POST
         public string? Message { get; set; }
     }
 }

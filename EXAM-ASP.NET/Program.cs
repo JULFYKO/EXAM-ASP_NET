@@ -3,6 +3,8 @@ using EXAM_ASP_NET.Interfaces;
 using EXAM_ASP_NET.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 
 string connStr = builder.Configuration.GetConnectionString("LocalDb")
@@ -16,6 +18,9 @@ builder.Services.AddDbContext<ShopDbContext>(options =>
     options.UseSqlServer(connStr));
 
 builder.Services.AddScoped<ICartService, CookieCartService>();
+
+builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Smtp"));
+builder.Services.AddTransient<IAppEmailSender, MailKitEmailSender>();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {

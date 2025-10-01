@@ -1,5 +1,6 @@
 using EXAM_ASP_NET.Data;
 using EXAM_ASP_NET.Models;
+using EXAM_ASP_NET.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +15,14 @@ namespace EXAM_ASP_NET.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ShopDbContext _db;
+        private readonly IAppEmailSender _emailSender;
 
-        public AccountController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, ShopDbContext db)
+        public AccountController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, ShopDbContext db, IAppEmailSender emailSender)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _db = db;
+            _emailSender = emailSender;
         }
 
         [HttpGet]
@@ -69,6 +72,21 @@ namespace EXAM_ASP_NET.Controllers
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
+                if (model.SendCredentials && !string.IsNullOrEmpty(model.Email))
+                {
+                    try
+                    {
+                        var subject = "Your account credentials";
+                        var html = $"<p>Дякуємо за реєстрацію.</p><p>Логін: <strong>{model.UserName}</strong></p><p>Пароль: <strong>{model.Password}</strong></p>";
+                        await _emailSender.SendEmailAsync(model.Email, subject, html);
+                        TempData["SuccessMessage"] = "Реєстрація пройшла успішно. Лист із даними відправлено.";
+                    }
+                    catch
+                    {
+                        TempData["ErrorMessage"] = "Користувача створено, але не вдалося відправити лист. Перевірте налаштування SMTP.";
+                    }
+                }
+
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return RedirectToAction("Index", "Home");
             }

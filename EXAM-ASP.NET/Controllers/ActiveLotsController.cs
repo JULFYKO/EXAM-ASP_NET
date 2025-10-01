@@ -114,7 +114,6 @@ namespace EXAM_ASP_NET.Controllers
                 AuctionEnd = product.AuctionEnd,
                 Quantity = product.Quantity,
                 Description = product.Description,
-                // suggest minimum
                 BidAmount = Math.Max(product.CurrentBid ?? product.StartingPrice, product.StartingPrice) + (product.MinBidIncrement > 0 ? product.MinBidIncrement : 0.01m),
                 BidHistory = await _db.Bids
                               .Where(b => b.ProductId == id)
@@ -128,7 +127,7 @@ namespace EXAM_ASP_NET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize] // користувач має бути залогінений для ставки
+        [Authorize]
         public async Task<IActionResult> Bid(BidViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -156,7 +155,6 @@ namespace EXAM_ASP_NET.Controllers
                 return View(model);
             }
 
-            // мінімальна допустима ставка
             var currentTop = product.CurrentBid ?? product.StartingPrice;
             var minAllowed = currentTop + (product.MinBidIncrement > 0 ? product.MinBidIncrement : 0.01m);
             if (model.BidAmount < minAllowed)
@@ -170,15 +168,12 @@ namespace EXAM_ASP_NET.Controllers
                 return View(model);
             }
 
-            // Якщо користувач натиснув Buy Now (або вказав суму >= BuyNow), обробка купівлі
             if (product.BuyNowPrice.HasValue && model.BidAmount >= product.BuyNowPrice.Value)
             {
-                // Запис BuyNow як останньої ставки і завершення аукціону (спрощено)
                 product.CurrentBid = product.BuyNowPrice;
                 product.IsAuction = false;
                 product.WinningUserId = int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var uid) ? (int?)uid : null;
 
-                // Додати запис в історію ставок (BuyNow)
                 var buyBid = new Bid
                 {
                     ProductId = product.Id,
@@ -199,7 +194,6 @@ namespace EXAM_ASP_NET.Controllers
                 return View(model);
             }
 
-            // нормальна ставка: зберегти запис і оновити CurrentBid
             var bidRecord = new Bid
             {
                 ProductId = product.Id,
@@ -211,7 +205,6 @@ namespace EXAM_ASP_NET.Controllers
 
             product.CurrentBid = model.BidAmount;
 
-            // Рекомендується обгорнути в транзакцію або додати механізми concurrency для змагань ставок
             await _db.SaveChangesAsync();
 
             model.CurrentBid = product.CurrentBid;
